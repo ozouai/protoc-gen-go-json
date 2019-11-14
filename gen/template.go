@@ -65,11 +65,15 @@ var (
 
 package {{.GoPkg.Name}}
 
+{{- if not (eq (len .Messages) 0)}}
+
 import (
 	"bytes"
 
 	"github.com/golang/protobuf/jsonpb"
 )
+
+{{- end -}}
 `))
 
 	messageTemplate = template.Must(template.New("message").Parse(`

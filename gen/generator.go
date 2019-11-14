@@ -3,6 +3,7 @@ package gen
 import (
 	"fmt"
 	"go/format"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -46,11 +47,18 @@ func (g *generator) Generate(targets []*descriptor.File) ([]*plugin.CodeGenerato
 			glog.Errorf("%v: %s", err, code)
 			return nil, err
 		}
-
+		goPackage := file.GetOptions().GetGoPackage()
 		name := file.GetName()
 		ext := filepath.Ext(name)
 		base := strings.TrimSuffix(name, ext)
 		output := fmt.Sprintf("%s.pb.json.go", base)
+		if goPackage != "" {
+			parts := strings.Split(goPackage, ";")
+			fileBase := filepath.Base(name)
+			fileName := strings.TrimSuffix(fileBase, ext)
+			output = path.Join("./", parts[0], fileName+".pb.json.go")
+		}
+
 		files = append(files, &plugin.CodeGeneratorResponse_File{
 			Name:    proto.String(output),
 			Content: proto.String(string(formatted)),
