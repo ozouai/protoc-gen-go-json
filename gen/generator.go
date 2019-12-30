@@ -61,7 +61,6 @@ func (g *generator) Generate(targets []*descriptor.File) ([]*plugin.CodeGenerato
 			fileBase := filepath.Base(name)
 			fileName := strings.TrimSuffix(fileBase, ext)
 			output = path.Join("./", parts[0], fileName+".pb.json.go")
-			fmt.Fprintln(os.Stderr, output)
 		}
 
 		files = append(files, &plugin.CodeGeneratorResponse_File{

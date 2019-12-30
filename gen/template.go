@@ -16,6 +16,7 @@ func applyTemplate(f *descriptor.File, opts Options) (string, error) {
 
 	if err := headerTemplate.Execute(w, tplHeader{
 		File: f,
+		AdditionalImports: opts.AdditionalImports,
 	}); err != nil {
 		return "", err
 	}
@@ -31,6 +32,7 @@ func applyTemplate(f *descriptor.File, opts Options) (string, error) {
 		if err := messageTemplate.Execute(w, tplMessage{
 			Message: msg,
 			Options: opts,
+
 		}); err != nil {
 			return "", err
 		}
@@ -41,6 +43,7 @@ func applyTemplate(f *descriptor.File, opts Options) (string, error) {
 
 type tplHeader struct {
 	*descriptor.File
+	AdditionalImports []string
 }
 
 type tplMessage struct {
