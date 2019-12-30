@@ -3,7 +3,6 @@ package gen
 import (
 	"fmt"
 	"go/format"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
