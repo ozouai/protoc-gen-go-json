@@ -3,6 +3,7 @@ package gen
 import (
 	"fmt"
 	"go/format"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -24,7 +25,10 @@ type Options struct {
 	EnumsAsInts  bool
 	EmitDefaults bool
 	OrigName     bool
+	AdditionalImports []string
+	Unmarshaler string
 }
+
 
 // New returns a generator which generates Go files that implement
 // json.Marshaler and json.Unmarshaler for the declared message types.
@@ -57,6 +61,7 @@ func (g *generator) Generate(targets []*descriptor.File) ([]*plugin.CodeGenerato
 			fileBase := filepath.Base(name)
 			fileName := strings.TrimSuffix(fileBase, ext)
 			output = path.Join("./", parts[0], fileName+".pb.json.go")
+			fmt.Fprintln(os.Stderr, output)
 		}
 
 		files = append(files, &plugin.CodeGeneratorResponse_File{

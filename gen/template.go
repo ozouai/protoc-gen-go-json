@@ -71,6 +71,9 @@ import (
 	"bytes"
 
 	"github.com/golang/protobuf/jsonpb"
+	{{$i := range .AdditionalImports}}
+	"${i}"
+	{{- end}}
 )
 
 {{- end -}}
@@ -90,7 +93,7 @@ func (msg *{{.TypeName}}) MarshalJSON() ([]byte,error) {
 
 // UnmarshalJSON implements json.Unmarshaler
 func (msg *{{.TypeName}}) UnmarshalJSON(b []byte) error {
-	return jsonpb.Unmarshal(bytes.NewReader(b), msg)
+	return {{.Unmarshaler}}(bytes.NewReader(b), msg)
 }
 `))
 )

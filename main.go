@@ -12,7 +12,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/codegenerator"
 	"github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
 
-	"github.com/mitchellh/protoc-gen-go-json/gen"
+	"github.com/visor-tax/protoc-gen-go-json/gen"
 )
 
 var (
@@ -21,6 +21,8 @@ var (
 	enumsAsInts  = flag.Bool("enums_as_ints", false, "render enums as integers as opposed to strings")
 	emitDefaults = flag.Bool("emit_defaults", false, "render fields with zero values")
 	origName     = flag.Bool("orig_name", false, "use original (.proto) name for fields")
+	additionalImports = flag.String("additional_imports", "", "additional imports for the generated file, comma delimited without quotes")
+	unmarshaler = flag.String("unmarshaler", "", "the unmarshaler to use, defaults to (jsonpb.Unmarshal)")
 )
 
 func main() {
@@ -59,10 +61,23 @@ func main() {
 		reg.AddPkgMap(k, v)
 	}
 
+	var additionalImportList []string
+	if *additionalImports != "" {
+		additionalImportList = strings.Split(*additionalImports, ",")
+	}
+
+	unmarshalCall := "jsonpb.Unmarshal"
+
+	if *unmarshaler != "" {
+		unmarshalCall = *unmarshaler
+	}
+
 	g := gen.New(reg, gen.Options{
 		EnumsAsInts:  *enumsAsInts,
 		EmitDefaults: *emitDefaults,
 		OrigName:     *origName,
+		AdditionalImports: additionalImportList,
+		Unmarshaler: unmarshalCall,
 	})
 	if err := reg.Load(req); err != nil {
 		emitError(err)
