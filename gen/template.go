@@ -71,7 +71,7 @@ import (
 	"bytes"
 
 	"github.com/golang/protobuf/jsonpb"
-	{{$i := range .AdditionalImports}}
+	{{range $i := .AdditionalImports}}
 	"${i}"
 	{{- end}}
 )
